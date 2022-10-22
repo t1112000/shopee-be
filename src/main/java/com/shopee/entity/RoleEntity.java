@@ -3,8 +3,8 @@ package com.shopee.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
-public class RoleEntity {
+@Table(name = "role")
+public class RoleEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
@@ -19,5 +19,30 @@ public class RoleEntity {
 //    @ManyToMany
 //    private List<RoleEntity> users;
 
-    public RoleEntity() {}
+    public RoleEntity() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(Boolean is_deleted) {
+        this.is_deleted = is_deleted;
+    }
 }
