@@ -7,11 +7,10 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseEntity {
     @Column(name = "created_at")
-    private Date created_at;
+    private Date created_at = new Date();
 
     @Column(name = "updated_at")
-    private Date updated_at;
-
+    private Date updated_at = new Date();
 
     public Date getCreated_at() {
         return created_at;

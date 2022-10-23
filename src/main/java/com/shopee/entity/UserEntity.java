@@ -1,6 +1,10 @@
 package com.shopee.entity;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +16,16 @@ public class UserEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @NotBlank(message = "Name is required")
     @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email",unique = true)
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
     private String email;
 
+    @NotBlank(message = "Password is required")
     @Column(name = "password")
     private String password;
 
@@ -29,7 +37,9 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<RoleEntity> roles;
+    @NotNull.List({@NotNull(message = "Roles must be array")})
+    @NotEmpty.List({@NotEmpty(message = "Roles can't be empty")})
+    private List<@Valid RoleEntity> roles;
 
     @OneToMany
     private List<CartEntity> carts = new ArrayList<>();

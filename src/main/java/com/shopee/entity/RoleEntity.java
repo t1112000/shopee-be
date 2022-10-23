@@ -1,15 +1,17 @@
 package com.shopee.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class RoleEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private Long id;
 
+    @NotBlank(message = "Name is required")
     @Column(name = "name")
     private String name;
 
