@@ -39,7 +39,7 @@ public class UserEntity extends BaseEntity {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @NotNull.List({@NotNull(message = "Roles must be array")})
     @NotEmpty.List({@NotEmpty(message = "Roles can't be empty")})
-    private List<@Valid RoleEntity> roles;
+    private List<@Valid RoleEntity> roles = new ArrayList<>();
 
     @OneToMany
     private List<CartEntity> carts = new ArrayList<>();
