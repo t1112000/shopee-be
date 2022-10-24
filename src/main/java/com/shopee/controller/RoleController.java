@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/roles")
 public class RoleController {
 
     @Autowired
