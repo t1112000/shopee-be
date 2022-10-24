@@ -41,11 +41,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<ResponseObject> update(Long id, UserEntity newUser) {
-//        Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
+        Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
         // Check email is already
-//        if (foundUser.isPresent()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is already"));
-//        }
+        if (foundUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is already"));
+        }
 
         Optional<UserEntity> userEntity = userRepository.findById(id).map(user -> {
             user.setName(newUser.getName());
@@ -67,14 +67,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<ResponseObject> save(UserEntity newUser) {
-//        Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
+        Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
 
         // Check email is already
-//        if (foundUser.isPresent()) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is already"));
-//        }
+        if (foundUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is already"));
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(false, "Created user successfully"));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(false, "Created user successfully",userRepository.save(newUser)));
 //        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(false, "Created user successfully",userRepository.save(newUser)));
     }
 
