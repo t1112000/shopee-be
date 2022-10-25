@@ -1,5 +1,6 @@
 package com.shopee.controller;
 
+import com.shopee.dto.UserDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.entity.UserEntity;
 import com.shopee.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> save(@RequestBody @Valid UserEntity user) {
+    public ResponseEntity<ResponseObject> save(@RequestBody @Valid UserDto user) {
         return userService.save(user);
     }
 
