@@ -1,7 +1,10 @@
 package com.shopee.service.impl;
 
+import com.shopee.dto.ProductDto;
+import com.shopee.entity.CategoryEntity;
 import com.shopee.entity.ProductEntity;
 import com.shopee.entity.ResponseObject;
+import com.shopee.repository.CategoryRepository;
 import com.shopee.repository.ProductRepository;
 import com.shopee.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +21,19 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public ResponseEntity<ResponseObject> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true,"Query products successfully",productRepository.findAllByIs_deletedFalse()));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query products successfully", productRepository.findAllByIs_deletedFalse()));
     }
 
     @Override
     public ResponseEntity<ResponseObject> findById(Long id) {
         Optional<ProductEntity> foundProduct = productRepository.findById(id);
 
-        if(foundProduct.isPresent()){
+        if (foundProduct.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query product successfully", foundProduct));
         }
 
@@ -35,18 +41,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> update(Long id, ProductEntity newProduct) {
-        Optional<ProductEntity> foundProduct = productRepository.findById(id).map(product -> {
-            product.setName(newProduct.getName());
-            product.setImages(newProduct.getImages());
-            product.setDescription(newProduct.getDescription());
-            product.setPrice(newProduct.getPrice());
-            product.setUpdated_at(new Date());
-            product.setCategory(newProduct.getCategory());
-            return productRepository.save(product);
-        });
+    public ResponseEntity<ResponseObject> update(Long id, ProductDto newProduct) {
+        Optional<ProductEntity> foundProduct = productRepository.findById(id);
 
-        if(foundProduct.isPresent()){
+        if (foundProduct.isPresent()) {
+            if (newProduct.getCategory_id() != null) {
+                Optional<CategoryEntity> foundCategory = categoryRepository.findById(newProduct.getCategory_id()).map(category -> {
+                    foundProduct.map(product -> {
+                        product.setCategory(category);
+                        return product;
+                    });
+                    return category;
+                });
+
+                if (foundCategory.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find category width id=" + newProduct.getCategory_id()));
+                }
+            }
+
+            foundProduct.map(product -> {
+                product.setName(newProduct.getName());
+                product.setDescription(newProduct.getDescription());
+                product.setImages(newProduct.getImages());
+                product.setPrice(newProduct.getPrice());
+                product.setUpdated_at(new Date());
+                return productRepository.save(product);
+            });
+
+
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Updated product successfully", foundProduct));
         }
 
@@ -54,19 +76,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> save(ProductEntity newProduct) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Created product successfully",productRepository.save(newProduct)));
+    public ResponseEntity<ResponseObject> save(ProductDto newProduct) {
+        Optional<CategoryEntity> foundCategory = categoryRepository.findById(newProduct.getCategory_id());
+
+        if (foundCategory.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find category width id=" + newProduct.getCategory_id()));
+        }
+
+        ProductEntity product = new ProductEntity();
+        product.setName(newProduct.getName());
+        product.setDescription(newProduct.getDescription());
+        product.setImages(newProduct.getImages());
+        product.setCategory(foundCategory.get());
+        product.setPrice(newProduct.getPrice());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Created product successfully", productRepository.save(product)));
     }
 
     @Override
     public ResponseEntity<ResponseObject> delete(Long id) {
-        Optional<ProductEntity> foundProduct = productRepository.findById(id).map(product->{
+        Optional<ProductEntity> foundProduct = productRepository.findByIdAndIs_deletedFalse(id).map(product -> {
             product.setIs_deleted(true);
             product.setUpdated_at(new Date());
             return productRepository.save(product);
         });
 
-        if(foundProduct.isPresent()){
+
+        if (foundProduct.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Deleted product successfully"));
         }
 

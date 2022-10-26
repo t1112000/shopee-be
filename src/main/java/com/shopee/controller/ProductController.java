@@ -1,6 +1,6 @@
 package com.shopee.controller;
 
-import com.shopee.entity.ProductEntity;
+import com.shopee.dto.ProductDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +17,27 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<ResponseObject> findAll() {
+    public ResponseEntity<ResponseObject> findAllProducts() {
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> findProductById(@PathVariable("id") Long id) {
         return productService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> save(@RequestBody @Valid ProductEntity product) {
-        return productService.save(product);
+    public ResponseEntity<ResponseObject> saveProduct(@RequestBody @Valid ProductDto newProduct) {
+        return productService.save(newProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> update(@PathVariable("id") Long id, @RequestBody ProductEntity product) {
-        return productService.update(id, product);
+    public ResponseEntity<ResponseObject> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDto newProduct) {
+        return productService.update(id, newProduct);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        productService.delete(id);
+    public ResponseEntity<ResponseObject> deleteProduct(@PathVariable("id") Long id) {
+        return productService.delete(id);
     }
 }

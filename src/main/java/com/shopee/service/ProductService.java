@@ -1,6 +1,6 @@
 package com.shopee.service;
 
-import com.shopee.entity.ProductEntity;
+import com.shopee.dto.ProductDto;
 import com.shopee.entity.ResponseObject;
 import org.springframework.http.ResponseEntity;
 
@@ -9,9 +9,9 @@ public interface ProductService {
 
     ResponseEntity<ResponseObject> findById(Long id);
 
-    ResponseEntity<ResponseObject> update(Long id, ProductEntity newProduct);
+    ResponseEntity<ResponseObject> update(Long id, ProductDto newProduct);
 
-    ResponseEntity<ResponseObject> save(ProductEntity newProduct);
+    ResponseEntity<ResponseObject> save(ProductDto newProduct);
 
     ResponseEntity<ResponseObject> delete(Long id);
 }

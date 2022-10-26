@@ -22,7 +22,7 @@ public class ProductEntity extends BaseEntity {
     private List<String> images = new ArrayList<>();
 
     @Column(name = "price")
-    private String price;
+    private double price;
 
     @Column(name = "description")
     private String description;
@@ -56,7 +56,9 @@ public class ProductEntity extends BaseEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        }
     }
 
     public List<String> getImages() {
@@ -64,15 +66,19 @@ public class ProductEntity extends BaseEntity {
     }
 
     public void setImages(List<String> images) {
-        this.images = images;
+        if (images != null) {
+            this.images = images;
+        }
     }
 
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setPrice(Double price) {
+        if (price != null) {
+            this.price = price;
+        }
     }
 
     public String getDescription() {
@@ -80,7 +86,9 @@ public class ProductEntity extends BaseEntity {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        if (description != null) {
+            this.description = description;
+        }
     }
 
     public Boolean getIs_deleted() {

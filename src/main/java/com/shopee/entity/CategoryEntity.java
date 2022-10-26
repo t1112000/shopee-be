@@ -18,9 +18,9 @@ public class CategoryEntity extends BaseEntity {
     @Column(name = "is_deleted")
     private Boolean is_deleted = false;
 
-    @OneToMany
-    @Column(name = "products")
-    private List<ProductEntity> products = new ArrayList<>();
+//    @OneToMany
+//    @Column(name = "products")
+//    private List<ProductEntity> products = new ArrayList<>();
 
     public CategoryEntity() {
     }
@@ -47,13 +47,5 @@ public class CategoryEntity extends BaseEntity {
 
     public void setIs_deleted(Boolean is_deleted) {
         this.is_deleted = is_deleted;
-    }
-
-    public List<ProductEntity> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductEntity> products) {
-        this.products = products;
     }
 }

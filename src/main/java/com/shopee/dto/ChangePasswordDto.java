@@ -1,34 +1,24 @@
 package com.shopee.dto;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class UserDto {
-    @NotBlank(message = "name is required")
-    private String name;
-
+public class ChangePasswordDto {
     @Email(message = "invalid email")
     @NotBlank(message = "email is required")
     private String email;
-
-    @NotBlank(message = "phone number is required")
-    private String phone_number;
 
     @NotBlank(message = "password is required")
     @Size(min = 6,message = "password should be greater or equals to 6")
     private String password;
 
-    private String address;
+    @NotBlank(message = "confirm password is required")
+    private String confirmPassword;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @NotBlank(message = "new password is required")
+    @Size(min = 6,message = "new password should be greater or equals to 6")
+    private String newPassword;
 
     public String getEmail() {
         return email;
@@ -36,14 +26,6 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
     }
 
     public String getPassword() {
@@ -54,11 +36,19 @@ public class UserDto {
         this.password = password;
     }
 
-    public String getAddress() {
-        return address;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

@@ -1,5 +1,6 @@
 package com.shopee.service.impl;
 
+import com.shopee.dto.ChangePasswordDto;
 import com.shopee.dto.UserDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.entity.RoleEntity;
@@ -13,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -52,12 +50,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> update(Long id, UserEntity newUser) {
+    public ResponseEntity<ResponseObject> signIn(UserDto user) {
+        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
+        if (foundUser.isPresent() && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login successfully", foundUser));
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email or password is wrong"));
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> updatePassword(ChangePasswordDto user) {
+        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
+
+        if (foundUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is not exist"));
+        }
+
+        if (!Objects.equals(user.getPassword(), user.getConfirmPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Current password and Confirm Password are not the same"));
+        }
+
+        if (Objects.equals(user.getNewPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "New password must not be the same as the current password"));
+        }
+
+        if (!bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Current password is wrong"));
+        }
+
+        foundUser.get().setPassword(bCryptPasswordEncoder.encode(user.getNewPassword()));
+        foundUser.get().setUpdated_at(new Date());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Change password successfully", userRepository.save(foundUser.get())));
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> update(Long id, UserDto newUser) {
         Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
 
         // Check email is already
-        if (foundUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is already"));
+        if (foundUser.isPresent() && foundUser.get().getId() != id) {
+            Map<String, String> validationError = new HashMap<>();
+            validationError.put("email", "email is already");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, validationError));
         }
 
         Optional<UserEntity> userEntity = userRepository.findById(id).map(user -> {
@@ -65,8 +101,6 @@ public class UserServiceImpl implements UserService {
             user.setEmail(newUser.getEmail());
             user.setUpdated_at(new Date());
             user.setAddress((newUser.getAddress()));
-            user.setPassword(newUser.getPassword());
-            user.setRoles(newUser.getRoles());
 
             return userRepository.save(user);
         });
@@ -85,19 +119,14 @@ public class UserServiceImpl implements UserService {
 
         // Check email is already
         if (foundUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is already"));
+            Map<String, String> validationError = new HashMap<>();
+            validationError.put("email", "email is already");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, validationError));
         }
 
-        // Create new role List
+        // Create new role User List
         List<RoleEntity> roles = new ArrayList<>();
-
-        // Find role
-        newUser.getRoles().forEach(role_id->{
-           roleRepository.findById(role_id).map(role->{
-               roles.add(role);
-               return role;
-           });
-        });
+        roles.add(roleRepository.findAllByName("USER"));
 
         // Create new User
         UserEntity user = new UserEntity();
@@ -109,12 +138,12 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roles);
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Created user successfully",userRepository.save(user)));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Created user successfully", userRepository.save(user)));
     }
 
     @Override
     public ResponseEntity<ResponseObject> delete(Long id) {
-        Optional<UserEntity> userEntity = userRepository.findById(id).map(user -> {
+        Optional<UserEntity> userEntity = userRepository.findByIdAndIs_deletedFalse(id).map(user -> {
             user.setIs_deleted(true);
             user.setUpdated_at(new Date());
             return userRepository.save(user);

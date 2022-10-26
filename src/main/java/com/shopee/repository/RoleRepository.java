@@ -6,9 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends JpaRepository<RoleEntity,Long> {
-    @Query(value = "select * from roles r where r.is_deleted=false",nativeQuery = true)
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
+    @Query(value = "select * from roles where is_deleted=false", nativeQuery = true)
     List<RoleEntity> findAllByIs_deletedFalse();
+
+    @Query(value = "select * from roles where name= ?1", nativeQuery = true)
+    RoleEntity findAllByName(String name);
+
+    @Query(value = "select * from roles where is_deleted=false and role_id= ?1", nativeQuery = true)
+    Optional<RoleEntity> findByIdAndIs_deletedFalse(Long id);
 }

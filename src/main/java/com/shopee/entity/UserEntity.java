@@ -1,7 +1,9 @@
 package com.shopee.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +21,10 @@ public class UserEntity extends BaseEntity {
     @Column(name = "phone_number")
     private String phone_number;
 
-    @Column(name = "email",unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
@@ -57,7 +60,9 @@ public class UserEntity extends BaseEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        }
     }
 
     public String getEmail() {
@@ -65,7 +70,9 @@ public class UserEntity extends BaseEntity {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (email != null) {
+            this.email = email;
+        }
     }
 
     public String getPassword() {
@@ -73,7 +80,9 @@ public class UserEntity extends BaseEntity {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (password != null) {
+            this.password = password;
+        }
     }
 
     public String getAddress() {
@@ -81,7 +90,9 @@ public class UserEntity extends BaseEntity {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        if (address != null) {
+            this.address = address;
+        }
     }
 
     public Boolean getIs_deleted() {

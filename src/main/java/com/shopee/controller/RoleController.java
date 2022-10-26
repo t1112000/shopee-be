@@ -1,7 +1,7 @@
 package com.shopee.controller;
 
+import com.shopee.dto.RoleDto;
 import com.shopee.entity.ResponseObject;
-import com.shopee.entity.RoleEntity;
 import com.shopee.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,27 +17,27 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<ResponseObject> findAll() {
+    public ResponseEntity<ResponseObject> findAllRoles() {
         return roleService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> findRoleById(@PathVariable("id") Long id) {
         return roleService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> save(@RequestBody @Valid RoleEntity role) {
-        return roleService.save(role);
+    public ResponseEntity<ResponseObject> saveRole(@RequestBody @Valid RoleDto newRole) {
+        return roleService.save(newRole);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> update(@PathVariable("id") Long id, @RequestBody RoleEntity role) {
-        return roleService.update(id, role);
+    public ResponseEntity<ResponseObject> updateRole(@PathVariable("id") Long id, @RequestBody @Valid RoleDto newRole) {
+        return roleService.update(id, newRole);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    public void deleteRole(@PathVariable("id") Long id) {
         roleService.delete(id);
     }
 }
