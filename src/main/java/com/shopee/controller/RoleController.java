@@ -37,7 +37,7 @@ public class RoleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRole(@PathVariable("id") Long id) {
-        roleService.delete(id);
+    public ResponseEntity<ResponseObject> deleteRole(@PathVariable("id") Long id) {
+        return roleService.delete(id);
     }
 }

@@ -17,19 +17,16 @@ public class CartEntity extends BaseEntity {
     private UserEntity user;
 
     @Column(name = "total")
-    private double total;
+    private double total = 0;
 
     @Column(name = "quantity")
-    private int quantity;
+    private int quantity = 0;
 
     @Column(name = "is_deleted")
     private Boolean is_deleted = false;
 
-    @ManyToMany
-    private List<ProductEntity> products = new ArrayList<>();
-
-    public CartEntity() {
-    }
+    @OneToMany
+    private List<CartItemEntity> cart_items = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -44,7 +41,9 @@ public class CartEntity extends BaseEntity {
     }
 
     public void setUser(UserEntity user) {
-        this.user = user;
+        if (user != null) {
+            this.user = user;
+        }
     }
 
     public double getTotal() {
@@ -52,7 +51,9 @@ public class CartEntity extends BaseEntity {
     }
 
     public void setTotal(double total) {
-        this.total = total;
+        if (total != 0) {
+            this.total = total;
+        }
     }
 
     public int getQuantity() {
@@ -60,7 +61,9 @@ public class CartEntity extends BaseEntity {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        if (quantity != 0) {
+            this.quantity = quantity;
+        }
     }
 
     public Boolean getIs_deleted() {
@@ -71,11 +74,13 @@ public class CartEntity extends BaseEntity {
         this.is_deleted = is_deleted;
     }
 
-    public List<ProductEntity> getProducts() {
-        return products;
+    public List<CartItemEntity> getCart_items() {
+        return cart_items;
     }
 
-    public void setProducts(List<ProductEntity> products) {
-        this.products = products;
+    public void setCart_items(List<CartItemEntity> cart_items) {
+        if (cart_items != null) {
+            this.cart_items = cart_items;
+        }
     }
 }

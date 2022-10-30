@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -39,7 +38,6 @@ public class RoleServiceImpl implements RoleService {
     public ResponseEntity<ResponseObject> update(Long id, RoleDto newRole) {
         Optional<RoleEntity> foundRole = roleRepository.findById(id).map(role -> {
             role.setName(newRole.getName());
-            role.setUpdated_at(new Date());
             return roleRepository.save(role);
         });
 
@@ -62,7 +60,6 @@ public class RoleServiceImpl implements RoleService {
     public ResponseEntity<ResponseObject> delete(Long id) {
         Optional<RoleEntity> foundRole = roleRepository.findByIdAndIs_deletedFalse(id).map(role -> {
             role.setIs_deleted(true);
-            role.setUpdated_at(new Date());
             return roleRepository.save(role);
         });
 

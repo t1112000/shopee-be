@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -39,7 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<ResponseObject> update(Long id, CategoryDto newCategory) {
         Optional<CategoryEntity> foundCategory = categoryRepository.findById(id).map(category -> {
             category.setName(newCategory.getName());
-            category.setUpdated_at(new Date());
             return categoryRepository.save(category);
         });
 
@@ -62,7 +60,6 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<ResponseObject> delete(Long id) {
         Optional<CategoryEntity> foundCategory = categoryRepository.findByIdAndIs_deletedFalse(id).map(category -> {
             category.setIs_deleted(true);
-            category.setUpdated_at(new Date());
             return categoryRepository.save(category);
         });
 

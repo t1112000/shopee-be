@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -64,7 +63,6 @@ public class ProductServiceImpl implements ProductService {
                 product.setDescription(newProduct.getDescription());
                 product.setImages(newProduct.getImages());
                 product.setPrice(newProduct.getPrice());
-                product.setUpdated_at(new Date());
                 return productRepository.save(product);
             });
 
@@ -97,7 +95,6 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<ResponseObject> delete(Long id) {
         Optional<ProductEntity> foundProduct = productRepository.findByIdAndIs_deletedFalse(id).map(product -> {
             product.setIs_deleted(true);
-            product.setUpdated_at(new Date());
             return productRepository.save(product);
         });
 

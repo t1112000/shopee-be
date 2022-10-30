@@ -38,11 +38,11 @@ public class UserEntity extends BaseEntity {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<RoleEntity> roles = new ArrayList<>();
 
-    @OneToMany
-    private List<CartEntity> carts = new ArrayList<>();
-
-    @OneToMany
-    private List<BillEntity> bills = new ArrayList<>();
+//    @OneToMany
+//    private List<CartEntity> carts = new ArrayList<>();
+//
+//    @OneToMany
+//    private List<BillEntity> bills = new ArrayList<>();
 
     public UserEntity() {
     }
@@ -109,22 +109,6 @@ public class UserEntity extends BaseEntity {
 
     public void setRoles(List<RoleEntity> roles) {
         this.roles = roles;
-    }
-
-    public List<CartEntity> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(List<CartEntity> carts) {
-        this.carts = carts;
-    }
-
-    public List<BillEntity> getBills() {
-        return bills;
-    }
-
-    public void setBills(List<BillEntity> bills) {
-        this.bills = bills;
     }
 
     public String getPhone_number() {

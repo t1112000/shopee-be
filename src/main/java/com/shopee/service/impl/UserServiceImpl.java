@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService {
         }
 
         foundUser.get().setPassword(bCryptPasswordEncoder.encode(user.getNewPassword()));
-        foundUser.get().setUpdated_at(new Date());
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Change password successfully", userRepository.save(foundUser.get())));
     }
@@ -99,7 +98,6 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userEntity = userRepository.findById(id).map(user -> {
             user.setName(newUser.getName());
             user.setEmail(newUser.getEmail());
-            user.setUpdated_at(new Date());
             user.setAddress((newUser.getAddress()));
 
             return userRepository.save(user);
@@ -145,7 +143,6 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<ResponseObject> delete(Long id) {
         Optional<UserEntity> userEntity = userRepository.findByIdAndIs_deletedFalse(id).map(user -> {
             user.setIs_deleted(true);
-            user.setUpdated_at(new Date());
             return userRepository.save(user);
         });
 

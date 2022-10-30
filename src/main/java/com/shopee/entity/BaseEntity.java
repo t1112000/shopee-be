@@ -24,7 +24,7 @@ public abstract class BaseEntity {
         return updated_at;
     }
 
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdated_at() {
+        this.updated_at = new Date();
     }
 }
