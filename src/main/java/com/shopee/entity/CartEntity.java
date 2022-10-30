@@ -51,9 +51,7 @@ public class CartEntity extends BaseEntity {
     }
 
     public void setTotal(double total) {
-        if (total != 0) {
-            this.total = total;
-        }
+        this.total = total;
     }
 
     public int getQuantity() {
@@ -61,9 +59,7 @@ public class CartEntity extends BaseEntity {
     }
 
     public void setQuantity(int quantity) {
-        if (quantity != 0) {
-            this.quantity = quantity;
-        }
+        this.quantity = quantity;
     }
 
     public Boolean getIs_deleted() {

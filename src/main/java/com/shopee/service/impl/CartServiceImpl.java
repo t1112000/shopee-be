@@ -129,6 +129,38 @@ public class CartServiceImpl implements CartService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find product with id=" + cartDto.getProduct_id()));
         }
 
+        if (cartDto.getQuantity() == 0) {
+            List<CartItemEntity> cartItems = cartItemRepository.findAllByProductId(cartDto.getProduct_id());
+
+            List<Long> ids = new ArrayList<>();
+
+            cartItems.forEach(cartItem -> {
+                ids.add(cartItem.getId());
+            });
+
+            foundCart.map(cart -> {
+                List<CartItemEntity> cartItemsByCart = new ArrayList<>();
+                int cartQuantity = 0;
+                double totalMoney = 0;
+
+                for (CartItemEntity cartItem : cart.getCart_items()) {
+                    if (!ids.contains(cartItem.getId())) {
+                        cartItemsByCart.add(cartItem);
+                        cartQuantity += cartItem.getQuantity();
+                        totalMoney += cartItem.getQuantity() * cartItem.getProduct().getPrice();
+                    }
+                }
+
+                cart.setQuantity(cartQuantity);
+                cart.setTotal(totalMoney);
+                cart.setCart_items(cartItemsByCart);
+                return cartRepository.save(cart);
+            });
+            System.out.println(ids);
+            cartItemRepository.deleteAllById(ids);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Updated cart successfully", foundCart));
+        }
+
         foundCart.map(cart -> {
             int cartQuantity = 0;
             double totalMoney = 0;
@@ -149,6 +181,7 @@ public class CartServiceImpl implements CartService {
 
             if (!is_product) {
                 CartItemEntity cartItem = new CartItemEntity();
+                cartItem.setQuantity(cartDto.getQuantity());
                 cartItem.setProduct(foundProduct.get());
 
                 totalMoney += cartItem.getQuantity() * cartItem.getProduct().getPrice();
