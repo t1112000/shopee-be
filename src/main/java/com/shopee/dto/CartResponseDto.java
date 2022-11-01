@@ -1,25 +1,22 @@
-package com.shopee.entity;
+package com.shopee.dto;
 
-import javax.persistence.*;
+import com.shopee.entity.CartItemEntity;
+import com.shopee.entity.UserEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "carts")
-public class CartEntity extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
+public class CartResponseDto {
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "is_deleted")
     private Boolean is_deleted = false;
 
-    @OneToMany
+    private double total = 0;
+
+    private int quantity = 0;
+
     private List<CartItemEntity> cart_items = new ArrayList<>();
 
     public Long getId() {
@@ -35,9 +32,7 @@ public class CartEntity extends BaseEntity {
     }
 
     public void setUser(UserEntity user) {
-        if (user != null) {
-            this.user = user;
-        }
+        this.user = user;
     }
 
     public Boolean getIs_deleted() {
@@ -48,13 +43,27 @@ public class CartEntity extends BaseEntity {
         this.is_deleted = is_deleted;
     }
 
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public List<CartItemEntity> getCart_items() {
         return cart_items;
     }
 
     public void setCart_items(List<CartItemEntity> cart_items) {
-        if (cart_items != null) {
-            this.cart_items = cart_items;
-        }
+        this.cart_items = cart_items;
     }
 }

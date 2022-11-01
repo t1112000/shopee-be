@@ -14,11 +14,12 @@ public class BillEntity extends BaseEntity {
     @JoinColumn(name = "cart_id", nullable = false)
     private CartEntity cart;
 
-//    @Column(name = "total")
-//    private double total;
+    @Column(name = "total")
+    private double total;
 
-//    @Column(name = "quantity")
-//    private int quantity;
+    @Column(name = "quantity")
+    private int quantity;
+
 //
 //    @ManyToMany
 //    private List<ProductEntity> products = new ArrayList<>();
@@ -33,5 +34,29 @@ public class BillEntity extends BaseEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public CartEntity getCart() {
+        return cart;
+    }
+
+    public void setCart(CartEntity cart) {
+        this.cart = cart;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
