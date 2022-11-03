@@ -1,6 +1,8 @@
 package com.shopee.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "bills")
@@ -10,15 +12,18 @@ public class BillEntity extends BaseEntity {
     @Column(name = "bill_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id", nullable = false)
-    private CartEntity cart;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
     @Column(name = "total")
     private double total;
 
     @Column(name = "quantity")
     private int quantity;
+
+    @OneToMany
+    private List<CartItemEntity> cart_items = new ArrayList<>();
 
 //
 //    @ManyToMany
@@ -36,14 +41,6 @@ public class BillEntity extends BaseEntity {
         this.id = id;
     }
 
-    public CartEntity getCart() {
-        return cart;
-    }
-
-    public void setCart(CartEntity cart) {
-        this.cart = cart;
-    }
-
     public double getTotal() {
         return total;
     }
@@ -58,5 +55,21 @@ public class BillEntity extends BaseEntity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public List<CartItemEntity> getCart_items() {
+        return cart_items;
+    }
+
+    public void setCart_items(List<CartItemEntity> cart_items) {
+        this.cart_items = cart_items;
     }
 }

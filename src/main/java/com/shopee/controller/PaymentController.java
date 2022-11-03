@@ -3,6 +3,7 @@ package com.shopee.controller;
 import com.shopee.dto.PaymentDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.service.PaymentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/payments")
+@Tag(name="Payments")
 public class PaymentController {
 
     @Autowired

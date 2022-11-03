@@ -3,6 +3,7 @@ package com.shopee.controller;
 import com.shopee.dto.CartDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.service.CartService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/carts")
+@Tag(name="Carts")
 public class CartController {
 
     @Autowired
@@ -20,7 +22,6 @@ public class CartController {
     private ResponseEntity<ResponseObject> getAllCarts() {
         return cartService.findAll();
     }
-
 
     @GetMapping("/{id}")
     private ResponseEntity<ResponseObject> getCartById(@PathVariable("id") Long id) {

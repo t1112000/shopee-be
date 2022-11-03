@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface BillRepository extends JpaRepository<BillEntity, Long> {
 
-    @Query(value = "SELECT * FROM bills b,carts c WHERE b.cart_id = c.cart_id AND c.user_id= ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM bills WHERE user_id= ?1", nativeQuery = true)
     List<BillEntity> findAllByUserId(Long userId);
 }
