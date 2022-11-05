@@ -17,7 +17,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfiguration {
     private static final String SCHEME_NAME = "bearer";
-    private static final String SCHEME = "basic";
 
     @Bean
     public Docket api() {
@@ -28,6 +27,14 @@ public class SwaggerConfiguration {
                 .build();
     }
 
+    private SecurityScheme createSecurityScheme() {
+        return new SecurityScheme()
+                .name(SCHEME_NAME)
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT");
+    }
+
     @Bean
     public OpenAPI springShopeeOpenAPI() {
         return new OpenAPI()
@@ -36,12 +43,5 @@ public class SwaggerConfiguration {
                 .components(new Components()
                         .addSecuritySchemes(SCHEME_NAME, createSecurityScheme()))
                 .addSecurityItem(new SecurityRequirement().addList(SCHEME_NAME));
-    }
-
-    private SecurityScheme createSecurityScheme() {
-        return new SecurityScheme()
-                .name(SCHEME_NAME)
-                .type(SecurityScheme.Type.APIKEY)
-                .scheme(SCHEME);
     }
 }

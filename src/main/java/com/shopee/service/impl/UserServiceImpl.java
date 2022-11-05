@@ -15,13 +15,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,8 +63,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<ResponseObject> signIn(UserDto user) {
+        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
+
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+            Set<GrantedAuthority> grantedAuthorities = new HashSet<>(); // use list if you wish
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + foundUser.get().getRole().getName()));
+
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), grantedAuthorities));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Email or password is wrong"));
         }
@@ -140,7 +144,7 @@ public class UserServiceImpl implements UserService {
         Optional<RoleEntity> foundRole = roleRepository.findByName("USER");
         UserEntity user = new UserEntity();
 
-        if (foundUser.isPresent()) {
+        if (foundRole.isPresent()) {
             user.setRole(foundRole.get());
         } else {
             RoleEntity newRole = new RoleEntity();

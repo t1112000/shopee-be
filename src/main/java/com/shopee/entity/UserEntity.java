@@ -33,7 +33,7 @@ public class UserEntity extends BaseEntity {
     private Boolean is_deleted = false;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id")
     private RoleEntity role;
 
 //    @OneToMany
