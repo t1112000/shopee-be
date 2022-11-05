@@ -18,7 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,7 +67,7 @@ public class UserServiceImpl implements UserService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Email or password is wrong"));
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login successfully", new AuthResponseDto(user.getEmail(), jwtUtil.generateToken(user.getEmail()))));
@@ -134,18 +137,22 @@ public class UserServiceImpl implements UserService {
         }
 
         // Create new role User List
-        List<RoleEntity> roles = new ArrayList<>();
-        roles.add(roleRepository.findAllByName("USER"));
-
-        // Create new User
+        Optional<RoleEntity> foundRole = roleRepository.findByName("USER");
         UserEntity user = new UserEntity();
+
+        if (foundUser.isPresent()) {
+            user.setRole(foundRole.get());
+        } else {
+            RoleEntity newRole = new RoleEntity();
+            newRole.setName("USER");
+            user.setRole(roleRepository.save(newRole));
+        }
+
         user.setName(newUser.getName());
         user.setAddress(newUser.getAddress());
         user.setEmail(newUser.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         user.setPhone_number(newUser.getPhone_number());
-        user.setRoles(roles);
-
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Created user successfully", userRepository.save(user)));
     }

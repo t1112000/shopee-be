@@ -14,7 +14,7 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
     List<RoleEntity> findAllByIs_deletedFalse();
 
     @Query(value = "select * from roles where name= ?1", nativeQuery = true)
-    RoleEntity findAllByName(String name);
+    Optional<RoleEntity> findByName(String name);
 
     @Query(value = "select * from roles where is_deleted=false and role_id= ?1", nativeQuery = true)
     Optional<RoleEntity> findByIdAndIs_deletedFalse(Long id);

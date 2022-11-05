@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,9 +32,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "is_deleted")
     private Boolean is_deleted = false;
 
-    @ManyToMany
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<RoleEntity> roles = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private RoleEntity role;
 
 //    @OneToMany
 //    private List<CartEntity> carts = new ArrayList<>();
@@ -103,12 +101,12 @@ public class UserEntity extends BaseEntity {
         this.is_deleted = is_deleted;
     }
 
-    public List<RoleEntity> getRoles() {
-        return roles;
+    public RoleEntity getRole() {
+        return role;
     }
 
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
+    public void setRole(RoleEntity role) {
+        this.role = role;
     }
 
     public String getPhone_number() {

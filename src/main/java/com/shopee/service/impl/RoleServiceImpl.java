@@ -50,6 +50,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResponseEntity<ResponseObject> save(RoleDto newRole) {
+        Optional<RoleEntity> foundRole = roleRepository.findByName(newRole.getName());
+
+        if (foundRole.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, "Invalid role"));
+        }
+
         RoleEntity role = new RoleEntity();
         role.setName(newRole.getName());
 
