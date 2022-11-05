@@ -44,11 +44,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/products").permitAll()
+                .antMatchers("/products", "/products/*").permitAll()
                 .antMatchers("/roles").hasRole("ADMIN")
                 .antMatchers("/categories").permitAll()
-                .antMatchers("/auth/sign-up").permitAll()
-                .antMatchers("/auth/sign-in").permitAll()
+                .antMatchers("/auth/sign-up", "auth/sign-in").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -56,6 +55,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/swagger-ui/*", "/v3/**/*");
+        web.ignoring().antMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/**/*");
     }
 }
