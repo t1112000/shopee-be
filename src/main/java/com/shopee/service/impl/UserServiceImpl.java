@@ -1,5 +1,6 @@
 package com.shopee.service.impl;
 
+import com.shopee.dto.AuthResponseDto;
 import com.shopee.dto.ChangePasswordDto;
 import com.shopee.dto.UserDto;
 import com.shopee.entity.ResponseObject;
@@ -8,9 +9,12 @@ import com.shopee.entity.UserEntity;
 import com.shopee.repository.RoleRepository;
 import com.shopee.repository.UserRepository;
 import com.shopee.service.UserService;
+import com.shopee.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -51,12 +61,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<ResponseObject> signIn(UserDto user) {
-        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
-        if (foundUser.isPresent() && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login successfully", foundUser));
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email or password is wrong"));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login successfully", new AuthResponseDto(user.getEmail(), jwtUtil.generateToken(user.getEmail()))));
     }
 
     @Override

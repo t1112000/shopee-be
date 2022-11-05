@@ -16,24 +16,25 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name="Auth")
+@Tag(name = "Auth")
 public class AuthController {
+
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/sign-up")
-    private ResponseEntity<ResponseObject> signIn(@RequestBody @Valid UserDto newUser){
+    private ResponseEntity<ResponseObject> signIn(@RequestBody @Valid UserDto newUser) {
         return userService.save(newUser);
     }
 
     @PostMapping("/sign-in")
-    private ResponseEntity<ResponseObject> signUp(@RequestBody UserDto user){
+    private ResponseEntity<ResponseObject> signUp(@RequestBody UserDto user) {
         return userService.signIn(user);
     }
 
     @PostMapping("/change-password")
-    private ResponseEntity<ResponseObject> updatePassword(@RequestBody @Valid ChangePasswordDto user){
+    private ResponseEntity<ResponseObject> updatePassword(@RequestBody @Valid ChangePasswordDto user) {
         return userService.updatePassword(user);
     }
 }
