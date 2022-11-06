@@ -9,18 +9,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/roles")
-@Tag(name="Roles")
+@Tag(name = "Roles")
 public class RoleController {
 
     @Autowired
     private RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<ResponseObject> findAllRoles() {
-        return roleService.findAll();
+    public ResponseEntity<ResponseObject> findAllRoles(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize,
+            @RequestParam(required = false) String name
+    ) {
+        return roleService.findAll(page, pageSize, name);
     }
 
     @GetMapping("/{id}")

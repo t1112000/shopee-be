@@ -1,6 +1,6 @@
 package com.shopee.controller;
 
-import com.shopee.dto.UserDto;
+import com.shopee.dto.SignUpDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,9 +10,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
+
 @RestController
 @RequestMapping("/users")
-@Tag(name="Users")
+@Tag(name = "Users")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserController {
 
@@ -21,8 +23,12 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseObject> findAllUsers() {
-        return userService.findAll();
+    public ResponseEntity<ResponseObject> findAllUsers(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize,
+            @RequestParam(required = false) String name
+    ) {
+        return userService.findAll(page, pageSize, name);
     }
 
     @GetMapping("/{id}")
@@ -31,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateUser(@PathVariable("id") Long id, @RequestBody UserDto newUser) {
+    public ResponseEntity<ResponseObject> updateUser(@PathVariable("id") Long id, @RequestBody SignUpDto newUser) {
         return userService.update(id, newUser);
     }
 

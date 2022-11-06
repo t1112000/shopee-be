@@ -1,15 +1,19 @@
 package com.shopee.service.impl;
 
 import com.shopee.dto.CategoryDto;
+import com.shopee.dto.list.CategoryListDto;
 import com.shopee.entity.CategoryEntity;
 import com.shopee.entity.ResponseObject;
 import com.shopee.repository.CategoryRepository;
 import com.shopee.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,8 +23,13 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query categories successfully", categoryRepository.findAllByIs_deletedFalse()));
+    public ResponseEntity<ResponseObject> findAll(int page, int pageSize, String name) {
+        Pageable paging = PageRequest.of((page - 1), pageSize);
+
+        List<CategoryEntity> categories = categoryRepository.findAllByIs_deletedFalse(name, paging).getContent();
+        int total = categoryRepository.getTotal(name);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query categories successfully", new CategoryListDto(total, categories)));
     }
 
     @Override

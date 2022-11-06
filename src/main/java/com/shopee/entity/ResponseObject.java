@@ -1,13 +1,14 @@
 package com.shopee.entity;
 
-import java.util.Map;
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Map;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseObject {
     private Boolean success;
     private String message;
     private Object data = null;
-
     private Map<String,String> validationsErrors;
 
     public ResponseObject(){}

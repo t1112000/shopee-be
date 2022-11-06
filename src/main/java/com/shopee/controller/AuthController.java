@@ -1,7 +1,8 @@
 package com.shopee.controller;
 
 import com.shopee.dto.ChangePasswordDto;
-import com.shopee.dto.UserDto;
+import com.shopee.dto.SignInDto;
+import com.shopee.dto.SignUpDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,12 +25,12 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    private ResponseEntity<ResponseObject> signIn(@RequestBody @Valid UserDto newUser) {
+    private ResponseEntity<ResponseObject> signUp(@RequestBody @Valid SignUpDto newUser) {
         return userService.save(newUser);
     }
 
     @PostMapping("/sign-in")
-    private ResponseEntity<ResponseObject> signUp(@RequestBody UserDto user) {
+    private ResponseEntity<ResponseObject> signIn(@RequestBody SignInDto user) {
         return userService.signIn(user);
     }
 

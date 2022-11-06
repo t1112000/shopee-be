@@ -11,10 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/products")
-@Tag(name="Products")
+@Tag(name = "Products")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ProductController {
 
@@ -22,8 +23,11 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<ResponseObject> findAllProducts() {
-        return productService.findAll();
+    public ResponseEntity<ResponseObject> findAllProducts(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize,
+            @RequestParam(required = false) String name) {
+        return productService.findAll(page, pageSize, name);
     }
 
     @GetMapping("/{id}")

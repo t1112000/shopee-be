@@ -1,6 +1,7 @@
 package com.shopee.service.impl;
 
 import com.shopee.dto.ProductDto;
+import com.shopee.dto.list.ProductListDto;
 import com.shopee.entity.CategoryEntity;
 import com.shopee.entity.ProductEntity;
 import com.shopee.entity.ResponseObject;
@@ -8,10 +9,13 @@ import com.shopee.repository.CategoryRepository;
 import com.shopee.repository.ProductRepository;
 import com.shopee.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,8 +28,13 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query products successfully", productRepository.findAllByIs_deletedFalse()));
+    public ResponseEntity<ResponseObject> findAll(int page, int pageSize, String name) {
+        Pageable paging = PageRequest.of((page - 1), pageSize);
+
+        List<ProductEntity> products = productRepository.findAllByIs_deletedFalse(name, paging).getContent();
+        int total = productRepository.getTotal(name);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query products successfully", new ProductListDto(total, products)));
     }
 
     @Override

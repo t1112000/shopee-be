@@ -11,10 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/categories")
-@Tag(name="Product Categories")
+@Tag(name = "Product Categories")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CategoryController {
 
@@ -22,8 +23,12 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    private ResponseEntity<ResponseObject> getAllCategories() {
-        return categoryService.findAll();
+    private ResponseEntity<ResponseObject> getAllCategories(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize,
+            @RequestParam(required = false) String name
+    ) {
+        return categoryService.findAll(page, pageSize, name);
     }
 
     @GetMapping("/{id}")

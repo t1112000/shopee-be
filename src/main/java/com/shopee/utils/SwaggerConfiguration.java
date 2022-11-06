@@ -38,7 +38,7 @@ public class SwaggerConfiguration {
     @Bean
     public OpenAPI springShopeeOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Shopee API")
+                .info(new Info().title("Shopee API Document")
                         .version("v0.0.1"))
                 .components(new Components()
                         .addSecuritySchemes(SCHEME_NAME, createSecurityScheme()))

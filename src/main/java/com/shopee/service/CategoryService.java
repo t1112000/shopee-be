@@ -6,7 +6,7 @@ import com.shopee.entity.ResponseObject;
 import org.springframework.http.ResponseEntity;
 
 public interface CategoryService {
-    ResponseEntity<ResponseObject> findAll();
+    ResponseEntity<ResponseObject> findAll(int page, int pageSize, String name);
 
     ResponseEntity<ResponseObject> findById(Long id);
 

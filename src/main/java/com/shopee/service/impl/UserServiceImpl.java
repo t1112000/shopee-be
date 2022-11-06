@@ -1,8 +1,9 @@
 package com.shopee.service.impl;
 
-import com.shopee.dto.AuthResponseDto;
 import com.shopee.dto.ChangePasswordDto;
-import com.shopee.dto.UserDto;
+import com.shopee.dto.SignInDto;
+import com.shopee.dto.SignUpDto;
+import com.shopee.dto.list.UserListDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.entity.RoleEntity;
 import com.shopee.entity.UserEntity;
@@ -11,6 +12,8 @@ import com.shopee.repository.UserRepository;
 import com.shopee.service.UserService;
 import com.shopee.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,8 +49,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query users successfully", userRepository.findAllByIs_deletedFalse()));
+    public ResponseEntity<ResponseObject> findAll(int page, int pageSize, String name) {
+        Pageable paging = PageRequest.of((page - 1), pageSize);
+        List<UserEntity> users = userRepository.findAllByIs_deletedFalse(name, paging).getContent();
+        int total = userRepository.getTotal(name);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query users successfully", new UserListDto(total, users)));
     }
 
     @Override
@@ -62,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> signIn(UserDto user) {
+    public ResponseEntity<ResponseObject> signIn(SignInDto user) {
         Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
 
         try {
@@ -70,11 +77,13 @@ public class UserServiceImpl implements UserService {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + foundUser.get().getRole().getName()));
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), grantedAuthorities));
+
+            foundUser.get().setToken(jwtUtil.generateToken(user.getEmail()));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login is successfully", foundUser));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Email or password is wrong"));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login successfully", new AuthResponseDto(user.getEmail(), jwtUtil.generateToken(user.getEmail()))));
     }
 
     @Override
@@ -103,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> update(Long id, UserDto newUser) {
+    public ResponseEntity<ResponseObject> update(Long id, SignUpDto newUser) {
         Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
 
         // Check email is already
@@ -130,7 +139,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> save(UserDto newUser) {
+    public ResponseEntity<ResponseObject> save(SignUpDto newUser) {
         Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
 
         // Check email is already
@@ -157,6 +166,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(newUser.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         user.setPhone_number(newUser.getPhone_number());
+        user.setToken(jwtUtil.generateToken(newUser.getEmail()));
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Created user successfully", userRepository.save(user)));
     }

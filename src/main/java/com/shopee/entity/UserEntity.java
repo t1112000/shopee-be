@@ -29,10 +29,14 @@ public class UserEntity extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "token")
+    private String token;
+
     @Column(name = "is_deleted")
     private Boolean is_deleted = false;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
@@ -115,5 +119,15 @@ public class UserEntity extends BaseEntity {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        if(token != null){
+            this.token = token;
+        }
     }
 }

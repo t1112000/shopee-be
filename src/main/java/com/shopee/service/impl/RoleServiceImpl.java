@@ -1,15 +1,19 @@
 package com.shopee.service.impl;
 
 import com.shopee.dto.RoleDto;
+import com.shopee.dto.list.RoleListDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.entity.RoleEntity;
 import com.shopee.repository.RoleRepository;
 import com.shopee.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,8 +23,13 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query roles successfully", roleRepository.findAllByIs_deletedFalse()));
+    public ResponseEntity<ResponseObject> findAll(int page, int pageSize, String name) {
+        Pageable paging = PageRequest.of((page - 1), pageSize);
+
+        List<RoleEntity> roles = roleRepository.findAllByIs_deletedFalse(name, paging).getContent();
+        int total = roleRepository.getTotal(name);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query roles successfully", new RoleListDto(total, roles)));
     }
 
     @Override
