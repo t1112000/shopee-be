@@ -23,7 +23,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    private ResponseEntity<ResponseObject> getAllCategories(
+    public ResponseEntity<ResponseObject> getAllCategories(
             @RequestParam(defaultValue = "1") @Min(0) int page,
             @RequestParam(defaultValue = "10") @Min(0) int pageSize,
             @RequestParam(required = false) String name
@@ -33,25 +33,25 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> findCategoryById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> findCategoryById(@PathVariable("id") Long id) {
         return categoryService.findById(id);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> updateCategory(@PathVariable("id") Long id, @RequestBody @Valid CategoryDto newCategory) {
+    public ResponseEntity<ResponseObject> updateCategory(@PathVariable("id") Long id, @RequestBody @Valid CategoryDto newCategory) {
         return categoryService.update(id, newCategory);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> saveCategory(@RequestBody @Valid CategoryDto newCategory) {
+    public ResponseEntity<ResponseObject> saveCategory(@RequestBody @Valid CategoryDto newCategory) {
         return categoryService.save(newCategory);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> deleteCategory(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> deleteCategory(@PathVariable("id") Long id) {
         return categoryService.delete(id);
     }
 }

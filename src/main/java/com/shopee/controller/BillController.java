@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/bills")
-@Tag(name="Bills")
+@Tag(name = "Bills")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class BillController {
     @Autowired
@@ -22,18 +21,21 @@ public class BillController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> findAllBills() {
-        return billService.findAll();
+    public ResponseEntity<ResponseObject> findAllBills(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize
+    ) {
+        return billService.findAll(page, pageSize);
     }
 
-    @GetMapping("/user/{id}")
-    private ResponseEntity<ResponseObject> findAllBillsByUserId(@PathVariable("id") Long userId) {
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<ResponseObject> findAllBillsByUserId(@PathVariable("user_id") Long userId) {
         return billService.findAllByUserId(userId);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> findBillById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> findBillById(@PathVariable("id") Long id) {
         return billService.findById(id);
     }
 }

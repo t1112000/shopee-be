@@ -2,6 +2,7 @@ package com.shopee.service.impl;
 
 import com.shopee.dto.CartDto;
 import com.shopee.dto.CartResponseDto;
+import com.shopee.dto.list.CartListDto;
 import com.shopee.entity.*;
 import com.shopee.repository.CartItemRepository;
 import com.shopee.repository.CartRepository;
@@ -9,6 +10,8 @@ import com.shopee.repository.ProductRepository;
 import com.shopee.repository.UserRepository;
 import com.shopee.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,8 +36,13 @@ public class CartServiceImpl implements CartService {
     private CartItemRepository cartItemRepository;
 
     @Override
-    public ResponseEntity<ResponseObject> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query carts successfully", cartRepository.findAllByIs_deletedFalse()));
+    public ResponseEntity<ResponseObject> findAll(int page, int pageSize) {
+        Pageable paging = PageRequest.of((page - 1), pageSize);
+
+        List<CartEntity> carts = cartRepository.findAllByIs_deletedFalse(paging).getContent();
+        int total = cartRepository.getTotal();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query carts successfully", new CartListDto(total, carts)));
     }
 
     @Override

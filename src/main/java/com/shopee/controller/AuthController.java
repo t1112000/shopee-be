@@ -20,22 +20,21 @@ import javax.validation.Valid;
 @Tag(name = "Auth")
 public class AuthController {
 
-
     @Autowired
     private UserService userService;
 
     @PostMapping("/sign-up")
-    private ResponseEntity<ResponseObject> signUp(@RequestBody @Valid SignUpDto newUser) {
+    public ResponseEntity<ResponseObject> signUp(@RequestBody @Valid SignUpDto newUser) {
         return userService.save(newUser);
     }
 
     @PostMapping("/sign-in")
-    private ResponseEntity<ResponseObject> signIn(@RequestBody SignInDto user) {
+    public ResponseEntity<ResponseObject> signIn(@RequestBody SignInDto user) {
         return userService.signIn(user);
     }
 
     @PostMapping("/change-password")
-    private ResponseEntity<ResponseObject> updatePassword(@RequestBody @Valid ChangePasswordDto user) {
+    public ResponseEntity<ResponseObject> updatePassword(@RequestBody @Valid ChangePasswordDto user) {
         return userService.updatePassword(user);
     }
 }

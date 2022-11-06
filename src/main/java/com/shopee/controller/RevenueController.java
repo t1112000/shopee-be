@@ -17,7 +17,7 @@ public class RevenueController {
     private RevenueService revenueService;
 
     @GetMapping
-    private ResponseEntity<ResponseObject> getRevenue() {
+    public ResponseEntity<ResponseObject> getRevenue() {
         return revenueService.getRevenue();
     }
 }

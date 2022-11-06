@@ -22,7 +22,7 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping
-    private ResponseEntity<ResponseObject> payment(@RequestBody @Valid PaymentDto paymentDto) {
+    public ResponseEntity<ResponseObject> payment(@RequestBody @Valid PaymentDto paymentDto) {
         return paymentService.payment(paymentDto);
     }
 }

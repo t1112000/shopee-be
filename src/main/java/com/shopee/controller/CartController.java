@@ -11,10 +11,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/carts")
-@Tag(name="Carts")
+@Tag(name = "Carts")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class CartController {
 
@@ -23,34 +24,37 @@ public class CartController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> getAllCarts() {
-        return cartService.findAll();
+    public ResponseEntity<ResponseObject> getAllCarts(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize
+    ) {
+        return cartService.findAll(page, pageSize);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> getCartById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> getCartById(@PathVariable("id") Long id) {
         return cartService.findById(id);
     }
 
-    @GetMapping("/user/{id}")
-    private ResponseEntity<ResponseObject> getCartByUserId(@PathVariable("id") Long userId) {
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<ResponseObject> getCartByUserId(@PathVariable("user_id") Long userId) {
         return cartService.findByUserId(userId);
     }
 
     @PostMapping
-    private ResponseEntity<ResponseObject> addToCart(@RequestBody @Valid CartDto cartDto) {
+    public ResponseEntity<ResponseObject> addToCart(@RequestBody @Valid CartDto cartDto) {
         return cartService.save(cartDto);
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<ResponseObject> updateCart(@PathVariable("id") Long id, @RequestBody @Valid CartDto cartDto) {
+    public ResponseEntity<ResponseObject> updateCart(@PathVariable("id") Long id, @RequestBody @Valid CartDto cartDto) {
         return cartService.update(id, cartDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    private ResponseEntity<ResponseObject> deleteCartById(@PathVariable("id") Long id) {
+    public ResponseEntity<ResponseObject> deleteCartById(@PathVariable("id") Long id) {
         return cartService.delete(id);
     }
 }

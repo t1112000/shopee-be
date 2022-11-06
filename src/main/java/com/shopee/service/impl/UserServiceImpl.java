@@ -94,8 +94,8 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is not exist"));
         }
 
-        if (!Objects.equals(user.getPassword(), user.getConfirmPassword())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Current password and Confirm Password are not the same"));
+        if (!Objects.equals(user.getNewPassword(), user.getConfirmPassword())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "New password and Confirm Password are not the same"));
         }
 
         if (Objects.equals(user.getNewPassword(), user.getPassword())) {
