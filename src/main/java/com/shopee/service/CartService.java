@@ -11,9 +11,9 @@ public interface CartService {
 
     ResponseEntity<ResponseObject> findByUserId(Long userId);
 
-    ResponseEntity<ResponseObject> save(CartDto cartDto);
+    ResponseEntity<ResponseObject> save(Long userId, CartDto cartDto);
 
-    ResponseEntity<ResponseObject> update(Long id, CartDto cartDto);
+    ResponseEntity<ResponseObject> update(Long userId, CartDto cartDto);
 
     ResponseEntity<ResponseObject> delete(Long id);
 }

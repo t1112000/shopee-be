@@ -118,7 +118,9 @@ public class UserEntity extends BaseEntity {
     }
 
     public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+        if(phone_number !=null){
+            this.phone_number = phone_number;
+        }
     }
 
     public String getToken() {

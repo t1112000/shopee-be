@@ -8,11 +8,11 @@ import java.util.List;
 public class BillListDto {
     private int total = 0;
 
-    private List<BillEntity> bill_list = new ArrayList<>();
+    private List<BillEntity> bills = new ArrayList<>();
 
-    public BillListDto(int total, List<BillEntity> bill_list) {
+    public BillListDto(int total, List<BillEntity> bills) {
         this.total = total;
-        this.bill_list = bill_list;
+        this.bills = bills;
     }
 
     public int getTotal() {
@@ -23,11 +23,11 @@ public class BillListDto {
         this.total = total;
     }
 
-    public List<BillEntity> getBill_list() {
-        return bill_list;
+    public List<BillEntity> getBills() {
+        return bills;
     }
 
-    public void setBill_list(List<BillEntity> bill_list) {
-        this.bill_list = bill_list;
+    public void setBills(List<BillEntity> bills) {
+        this.bills = bills;
     }
 }

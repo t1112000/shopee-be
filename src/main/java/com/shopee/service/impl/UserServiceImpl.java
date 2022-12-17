@@ -3,6 +3,7 @@ package com.shopee.service.impl;
 import com.shopee.dto.ChangePasswordDto;
 import com.shopee.dto.SignInDto;
 import com.shopee.dto.SignUpDto;
+import com.shopee.dto.UpdateUserInfoDto;
 import com.shopee.dto.list.UserListDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.entity.RoleEntity;
@@ -70,7 +71,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<ResponseObject> signIn(SignInDto user) {
-        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail());
+        Optional<UserEntity> foundUser = userRepository.findByEmail(user.getEmail()).map(userInfo -> {
+            userInfo.setToken(jwtUtil.generateToken(userInfo.getEmail()));
+
+            return userRepository.save(userInfo);
+        });
 
         try {
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>(); // use list if you wish
@@ -78,7 +83,6 @@ public class UserServiceImpl implements UserService {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), grantedAuthorities));
 
-            foundUser.get().setToken(jwtUtil.generateToken(user.getEmail()));
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Login is successfully", foundUser));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseObject(false, "Email or password is wrong"));
@@ -92,10 +96,6 @@ public class UserServiceImpl implements UserService {
 
         if (foundUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Email is not exist"));
-        }
-
-        if (!Objects.equals(user.getNewPassword(), user.getConfirmPassword())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "New password and Confirm Password are not the same"));
         }
 
         if (Objects.equals(user.getNewPassword(), user.getPassword())) {
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> update(Long id, SignUpDto newUser) {
+    public ResponseEntity<ResponseObject> update(Long id, UpdateUserInfoDto newUser) {
         Optional<UserEntity> foundUser = userRepository.findByEmail(newUser.getEmail());
 
         // Check email is already
@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
             user.setName(newUser.getName());
             user.setEmail(newUser.getEmail());
             user.setAddress((newUser.getAddress()));
+            user.setPhone_number(newUser.getPhone_number());
 
             return userRepository.save(user);
         });

@@ -1,6 +1,6 @@
 package com.shopee.controller;
 
-import com.shopee.dto.SignUpDto;
+import com.shopee.dto.UpdateUserInfoDto;
 import com.shopee.entity.ResponseObject;
 import com.shopee.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateUser(@PathVariable("id") Long id, @RequestBody SignUpDto newUser) {
+    public ResponseEntity<ResponseObject> updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserInfoDto newUser) {
         return userService.update(id, newUser);
     }
 

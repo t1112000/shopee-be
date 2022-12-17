@@ -3,14 +3,14 @@ package com.shopee.dto;
 import javax.validation.constraints.NotNull;
 
 public class PaymentDto {
-    @NotNull(message = "cart_id is required")
-    private Long cart_id;
+    @NotNull(message = "user_id is required")
+    private Long user_id;
 
-    public Long getCart_id() {
-        return cart_id;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setCart_id(Long cart_id) {
-        this.cart_id = cart_id;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 }

@@ -8,11 +8,11 @@ import java.util.List;
 public class ProductListDto {
     private int total = 0;
 
-    private List<ProductEntity> product_list = new ArrayList<>();
+    private List<ProductEntity> products = new ArrayList<>();
 
-    public ProductListDto(int total, List<ProductEntity> product_list) {
+    public ProductListDto(int total, List<ProductEntity> products) {
         this.total = total;
-        this.product_list = product_list;
+        this.products = products;
     }
 
     public int getTotal() {
@@ -23,11 +23,11 @@ public class ProductListDto {
         this.total = total;
     }
 
-    public List<ProductEntity> getProduct_list() {
-        return product_list;
+    public List<ProductEntity> getProducts() {
+        return products;
     }
 
-    public void setProduct_list(List<ProductEntity> product_list) {
-        this.product_list = product_list;
+    public void setProducts(List<ProductEntity> products) {
+        this.products = products;
     }
 }

@@ -7,6 +7,7 @@ import com.shopee.entity.CartItemEntity;
 import com.shopee.entity.ResponseObject;
 import com.shopee.repository.BillRepository;
 import com.shopee.repository.CartRepository;
+import com.shopee.service.CartService;
 import com.shopee.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,11 +27,19 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private BillRepository billRepository;
 
+    @Autowired
+    private CartService cartService;
+
     @Override
     public ResponseEntity<ResponseObject> payment(PaymentDto paymentDto) {
-        Optional<CartEntity> foundCart = cartRepository.findByIdAndIs_deletedFalse(paymentDto.getCart_id());
+        Optional<CartEntity> foundCart = cartRepository.findByIs_deletedFalseAndUserId(paymentDto.getUser_id());
 
         if (foundCart.isPresent()) {
+
+            if (foundCart.get().getCart_items().size() == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseObject(false, "There are no products to pay for"));
+            }
+
             BillEntity newBill = new BillEntity();
 
             int total = 0;
@@ -50,13 +59,11 @@ public class PaymentServiceImpl implements PaymentService {
             newBill.setQuantity(quantity);
             newBill.setUser(foundCart.get().getUser());
             newBill.setCart_items(cartItems);
+            cartService.delete(foundCart.get().getId());
 
-            foundCart.get().setIs_deleted(true);
-            cartRepository.save(foundCart.get());
-
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Payment is sucessfully", billRepository.save(newBill)));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Payment is successfully", billRepository.save(newBill)));
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find cart with id=" + paymentDto.getCart_id()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find cart with user_id=" + paymentDto.getUser_id()));
     }
 }

@@ -8,11 +8,11 @@ import java.util.List;
 public class CartListDto {
     private int total = 0;
 
-    private List<CartEntity> cart_list = new ArrayList<>();
+    private List<CartEntity> carts = new ArrayList<>();
 
-    public CartListDto(int total, List<CartEntity> cart_list) {
+    public CartListDto(int total, List<CartEntity> carts) {
         this.total = total;
-        this.cart_list = cart_list;
+        this.carts = carts;
     }
 
     public int getTotal() {
@@ -23,11 +23,11 @@ public class CartListDto {
         this.total = total;
     }
 
-    public List<CartEntity> getCart_list() {
-        return cart_list;
+    public List<CartEntity> getCarts() {
+        return carts;
     }
 
-    public void setCart_list(List<CartEntity> cart_list) {
-        this.cart_list = cart_list;
+    public void setCarts(List<CartEntity> carts) {
+        this.carts = carts;
     }
 }

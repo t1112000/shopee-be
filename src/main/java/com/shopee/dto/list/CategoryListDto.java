@@ -8,11 +8,11 @@ import java.util.List;
 public class CategoryListDto {
     private int total = 0;
 
-    private List<CategoryEntity> category_list = new ArrayList<>();
+    private List<CategoryEntity> categories = new ArrayList<>();
 
-    public CategoryListDto(int total, List<CategoryEntity> category_list) {
+    public CategoryListDto(int total, List<CategoryEntity> categories) {
         this.total = total;
-        this.category_list = category_list;
+        this.categories = categories;
     }
 
     public int getTotal() {
@@ -23,11 +23,11 @@ public class CategoryListDto {
         this.total = total;
     }
 
-    public List<CategoryEntity> getCategory_list() {
-        return category_list;
+    public List<CategoryEntity> getCategories() {
+        return categories;
     }
 
-    public void setCategory_list(List<CategoryEntity> category_list) {
-        this.category_list = category_list;
+    public void setCategories(List<CategoryEntity> categories) {
+        this.categories = categories;
     }
 }
