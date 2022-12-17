@@ -31,8 +31,13 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> findAllByUserId(Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query bills successfully", billRepository.findAllByUserId(userId)));
+    public ResponseEntity<ResponseObject> findAllByUserId(int page, int pageSize, Long userId) {
+        Pageable paging = PageRequest.of((page - 1), pageSize);
+
+        List<BillEntity> bills = billRepository.findAllByUserId(paging, userId).getContent();
+        int total = billRepository.findAll().size();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(true, "Query bills successfully", new BillListDto(total, bills)));
     }
 
     @Override

@@ -8,11 +8,11 @@ import java.util.List;
 public class RoleListDto {
     private int total = 0;
 
-    private List<RoleEntity> role_list = new ArrayList<>();
+    private List<RoleEntity> roles = new ArrayList<>();
 
-    public RoleListDto(int total, List<RoleEntity> role_list) {
+    public RoleListDto(int total, List<RoleEntity> roles) {
         this.total = total;
-        this.role_list = role_list;
+        this.roles = roles;
     }
 
     public int getTotal() {
@@ -23,11 +23,11 @@ public class RoleListDto {
         this.total = total;
     }
 
-    public List<RoleEntity> getRole_list() {
-        return role_list;
+    public List<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public void setRole_list(List<RoleEntity> role_list) {
-        this.role_list = role_list;
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

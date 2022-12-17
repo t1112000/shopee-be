@@ -8,11 +8,11 @@ import java.util.List;
 public class UserListDto {
     private int total = 0;
 
-    private List<UserEntity> user_list = new ArrayList<>();
+    private List<UserEntity> users = new ArrayList<>();
 
-    public UserListDto(int total, List<UserEntity> user_list) {
+    public UserListDto(int total, List<UserEntity> users) {
         this.total = total;
-        this.user_list = user_list;
+        this.users = users;
     }
 
     public int getTotal() {
@@ -23,11 +23,11 @@ public class UserListDto {
         this.total = total;
     }
 
-    public List<UserEntity> getUser_list() {
-        return user_list;
+    public List<UserEntity> getUsers() {
+        return users;
     }
 
-    public void setUser_list(List<UserEntity> user_list) {
-        this.user_list = user_list;
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
     }
 }

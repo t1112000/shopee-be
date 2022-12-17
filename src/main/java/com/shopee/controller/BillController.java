@@ -29,8 +29,11 @@ public class BillController {
     }
 
     @GetMapping("/user/{user_id}")
-    public ResponseEntity<ResponseObject> findAllBillsByUserId(@PathVariable("user_id") Long userId) {
-        return billService.findAllByUserId(userId);
+    public ResponseEntity<ResponseObject> findAllBillsByUserId(
+            @RequestParam(defaultValue = "1") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(0) int pageSize,
+            @PathVariable("user_id") Long userId) {
+        return billService.findAllByUserId(page, pageSize, userId);
     }
 
     @GetMapping("/{id}")

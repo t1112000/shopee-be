@@ -96,22 +96,22 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> save(CartDto cartDto) {
+    public ResponseEntity<ResponseObject> save(Long userId, CartDto cartDto) {
         Optional<ProductEntity> foundProduct = productRepository.findByIdAndIs_deletedFalse(cartDto.getProduct_id());
-        Optional<UserEntity> foundUser = userRepository.findByIdAndIs_deletedFalse(cartDto.getUser_id());
+        Optional<UserEntity> foundUser = userRepository.findByIdAndIs_deletedFalse(userId);
 
         if (foundProduct.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find product with id=" + cartDto.getProduct_id()));
         }
 
-        Optional<CartEntity> foundCart = cartRepository.findByIs_deletedFalseAndUserId(cartDto.getUser_id()).map(cart -> {
+        Optional<CartEntity> foundCart = cartRepository.findByIs_deletedFalseAndUserId(userId).map(cart -> {
             List<CartItemEntity> cartItems = new ArrayList<>();
 
             boolean is_product = false;
 
             for (CartItemEntity cartItem : cart.getCart_items()) {
                 if (cartItem.getProduct().getId() == cartDto.getProduct_id()) {
-                    cartItem.setQuantity(cartItem.getQuantity() + 1);
+                    cartItem.setQuantity(cartItem.getQuantity() + cartDto.getQuantity());
                     is_product = true;
                     cartItemRepository.save(cartItem);
                 }
@@ -121,6 +121,7 @@ public class CartServiceImpl implements CartService {
             if (!is_product) {
                 CartItemEntity cartItem = new CartItemEntity();
                 cartItem.setProduct(foundProduct.get());
+                cartItem.setQuantity(cartDto.getQuantity());
                 cartItems.add(cartItemRepository.save(cartItem));
             }
 
@@ -147,12 +148,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ResponseEntity<ResponseObject> update(Long id, CartDto cartDto) {
-        Optional<CartEntity> foundCart = cartRepository.findByIdAndIs_deletedFalse(id);
+    public ResponseEntity<ResponseObject> update(Long userId, CartDto cartDto) {
+        Optional<CartEntity> foundCart = cartRepository.findByIs_deletedFalseAndUserId(userId);
         Optional<ProductEntity> foundProduct = productRepository.findByIdAndIs_deletedFalse(cartDto.getProduct_id());
 
         if (foundCart.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find cart with id=" + id));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(false, "Cannot find cart with user_id=" + userId));
         }
 
         if (foundProduct.isEmpty()) {

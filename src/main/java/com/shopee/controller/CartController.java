@@ -42,19 +42,13 @@ public class CartController {
         return cartService.findByUserId(userId);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseObject> addToCart(@RequestBody @Valid CartDto cartDto) {
-        return cartService.save(cartDto);
+    @PostMapping("/user/{user_id}")
+    public ResponseEntity<ResponseObject> addToCart(@PathVariable("user_id") Long userId, @RequestBody @Valid CartDto cartDto) {
+        return cartService.save(userId, cartDto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateCart(@PathVariable("id") Long id, @RequestBody @Valid CartDto cartDto) {
-        return cartService.update(id, cartDto);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseObject> deleteCartById(@PathVariable("id") Long id) {
-        return cartService.delete(id);
+    @PutMapping("/user/{user_id}")
+    public ResponseEntity<ResponseObject> updateCart(@PathVariable("user_id") Long user_id, @RequestBody @Valid CartDto cartDto) {
+        return cartService.update(user_id, cartDto);
     }
 }

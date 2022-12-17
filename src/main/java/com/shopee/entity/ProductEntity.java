@@ -24,7 +24,7 @@ public class ProductEntity extends BaseEntity {
     @Column(name = "price")
     private double price;
 
-    @Column(name = "description")
+    @Column(name = "description",columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "is_deleted")
